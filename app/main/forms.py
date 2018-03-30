@@ -54,3 +54,8 @@ class EditProfileAdminForm(FlaskForm):
 class PostForm(FlaskForm):
     body = PageDownField("写点撒子吧", validators=[DataRequired()])
     submit = SubmitField('写好了')
+
+class CommentForm(FlaskForm):
+    body = StringField('', validators=[DataRequired()])
+    submit = SubmitField('开喷')
+
