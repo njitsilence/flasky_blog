@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from markdown import markdown
 import bleach
-from flask import current_app, request
+from flask import current_app, request,url_for
 from flask_login import UserMixin, AnonymousUserMixin
 from . import db, login_manager
 
@@ -233,6 +233,20 @@ class User(UserMixin, db.Model):
                 user.follow(user)
                 db.session.add(user)
                 db.session.commit()
+
+    def to_json(self):
+        json_user = {
+            'url': url_for('api.get_user', id=self.id),
+            'username': self.username,
+            'member_since': self.member_since,
+            'last_seen': self.last_seen,
+            'posts_url': url_for('api.get_user_posts', id=self.id),
+            'followed_posts_url': url_for('api.get_user_followed_posts',
+                                          id=self.id),
+            'post_count': self.posts.count()
+        }
+
+        return json_user
 
 
     def __repr__(self):
